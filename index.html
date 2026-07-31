@@ -360,5 +360,11 @@ el('start-btn').onclick=()=>{show('quiz');renderQuestion();};
 el('restart-btn').onclick=()=>{current=0;answers.length=0;scores.kc=scores.le=scores.rp=0;show('intro');};
 el('yr').textContent=new Date().getFullYear();
 </script>
+
+<!-- Vercel Web Analytics (static HTML version — no npm package needed) -->
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
