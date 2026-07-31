@@ -173,7 +173,7 @@ h1,h2,h3,.display{font-family:var(--display);line-height:1.1;letter-spacing:-.02
     <div class="secondary">
       <button class="restart" id="restart-btn">↺ Retake the check-in</button>
     </div>
-    <p class="disclaimer">This check-in offers general, educational guidance based on your answers — it isn't medical or psychological advice. Every family is different; trust what you know about your child.</p>
+    <p class="disclaimer">This check-in offers general, educational guidance based on your answers — it isn't medical, psychological or diagnostic advice, and it can't assess your child. If you're worried about your child's development, learning, hearing, vision or wellbeing, please speak with your pediatrician or their teacher. Every family is different; trust what you know about your child.</p>
   </div>
 </section>
 
@@ -212,6 +212,21 @@ const PRODUCTS = {
     cta:'Get the guide →',
     url:'https://parentlabofficial.com/prd_hwm8plq3'
   },
+  wi: {
+    key:'wi',
+    eyebrow:'Your match',
+    mirror:'Your struggle is school — and no one has told you why it\'s so hard.',
+    mirrorp:'The homework battles. The "she\'s bright, but…". The advice that never quite fits. Here\'s the thing: the same struggle can have completely different causes — so guessing rarely works. This system helps you find the actual one.',
+    title:'Why Isn\'t It Clicking?',
+    priceHTML:'<span>$37</span> <span style="opacity:.85;font-size:.9rem">Instant download</span>',
+    why:[
+      'A 6-domain assessment that maps what\'s actually blocking your child — instead of guessing.',
+      'Modular roadblock cards (body, gaps, attention, wiring, feelings, fit) — you only read the ones that apply to you.',
+      'A 30-day plan you build yourself, plus exactly when to bring in a professional and who to call.'
+    ],
+    cta:'Get the system →',
+    url:'https://parentlabofficial.com/prd_hsyizbh8'
+  },
   rp: {
     key:'rp',
     eyebrow:'Your match',
@@ -233,22 +248,23 @@ const PRODUCTS = {
 // each option adds weights toward kc / le / rp
 const QUESTIONS = [
   {
-    title:"How old is your little one?",
+    title:"How old is your child?",
     sub:"This helps us tailor the match to their stage.",
     options:[
-      {emoji:"🍼",label:"Under 2",w:{kc:1,le:1,rp:0}},
+      {emoji:"🍼",label:"Under 2",w:{kc:1,le:1}},
       {emoji:"🧸",label:"2 to 3 years",w:{kc:1,le:2,rp:2}},
-      {emoji:"🖍️",label:"3 to 4 years",w:{kc:1,le:2,rp:1}},
-      {emoji:"⚽",label:"4 to 6 years",w:{kc:1,le:2,rp:0}}
+      {emoji:"🖍️",label:"3 to 5 years",w:{kc:1,le:2,rp:1}},
+      {emoji:"🎒",label:"6 to 11 years",w:{kc:1,wi:4}}
     ]
   },
   {
-    title:"When the day gets hard, what's usually at the center of it?",
+    title:"When things get hard, what's usually at the center of it?",
     sub:"Pick the one that hits closest to home.",
     options:[
       {emoji:"🌋",label:"Meltdowns & big emotions I don't know how to handle",w:{le:3}},
       {emoji:"🙉",label:"Getting them to listen and cooperate",w:{le:3}},
       {emoji:"🚽",label:"Potty training battles",w:{rp:4}},
+      {emoji:"📚",label:"School struggles — reading, math, focus, homework",w:{wi:4}},
       {emoji:"😮‍💨",label:"Honestly? I'm the one losing my cool",w:{kc:3}}
     ]
   },
@@ -259,6 +275,7 @@ const QUESTIONS = [
       {emoji:"😔",label:"\u201cI feel like I'm always yelling, then feeling guilty.\u201d",w:{kc:3}},
       {emoji:"🤷",label:"\u201cI never know what to say in the moment.\u201d",w:{le:3}},
       {emoji:"😩",label:"\u201cI'm dreading — or stuck on — potty training.\u201d",w:{rp:3}},
+      {emoji:"📝",label:"\u201cHomework has turned into a nightly battle.\u201d",w:{wi:3}},
       {emoji:"🫠",label:"\u201cI'm just exhausted and doubting myself.\u201d",w:{kc:2,le:1}}
     ]
   },
@@ -268,6 +285,7 @@ const QUESTIONS = [
     options:[
       {emoji:"📅",label:"A potty deadline (daycare, a trip, family visiting)",w:{rp:4}},
       {emoji:"🔁",label:"Daily tantrums and power struggles",w:{le:3}},
+      {emoji:"📉",label:"My child is falling behind at school",w:{wi:4}},
       {emoji:"🧘",label:"My own patience and reactions",w:{kc:3}},
       {emoji:"🌱",label:"Nothing urgent — I just want to parent better",w:{kc:1,le:1}}
     ]
@@ -278,6 +296,7 @@ const QUESTIONS = [
     options:[
       {emoji:"💬",label:"Knowing exactly what to say when they melt down",w:{le:3}},
       {emoji:"🚼",label:"Finally getting out of diapers — calmly",w:{rp:4}},
+      {emoji:"🔍",label:"Understanding why school is so hard for them",w:{wi:4}},
       {emoji:"🕊️",label:"Staying calm no matter what they throw at me",w:{kc:3}},
       {emoji:"🧠",label:"Understanding WHY my kid does what they do",w:{le:2,kc:1}}
     ]
@@ -285,7 +304,7 @@ const QUESTIONS = [
 ];
 
 // ---------- ENGINE ----------
-const scores={kc:0,le:0,rp:0};
+const scores={kc:0,le:0,rp:0,wi:0};
 let current=0;
 const answers=[]; // store chosen option index per question
 
@@ -337,7 +356,7 @@ function finish(){
 
 function pickWinner(){
   // highest score; tie-break priority: rp (most specific) > le > kc
-  const order=['rp','le','kc'];
+  const order=['wi','rp','le','kc'];
   let best=null,bestScore=-1;
   order.forEach(k=>{ if(scores[k]>bestScore){bestScore=scores[k];best=k;} });
   return best;
@@ -357,7 +376,7 @@ function showResult(){
 }
 
 el('start-btn').onclick=()=>{show('quiz');renderQuestion();};
-el('restart-btn').onclick=()=>{current=0;answers.length=0;scores.kc=scores.le=scores.rp=0;show('intro');};
+el('restart-btn').onclick=()=>{current=0;answers.length=0;scores.kc=scores.le=scores.rp=scores.wi=0;show('intro');};
 el('yr').textContent=new Date().getFullYear();
 </script>
 
