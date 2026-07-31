@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Your Parenting Guide — ParentLab</title>
+<meta name="description" content="Take the 2-minute ParentLab assessment and get matched with the guide that fits your family's biggest challenge right now.">
+
+<!--
+  ⚠️ REPLACE THESE 3 LINKS before publishing (search "REPLACE_LINK"):
+   • Keep Your Cool (free guide)  → your Chariow freebie page
+   • Little Ears, Big Feelings     → https://parentlab.mychariow.co/prd_hwm8plq3  (already set)
+   • Ready, Set, Potty             → your Chariow potty product page (once live)
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --emerald:#1B7A4F; --emerald-deep:#12603C; --emerald-ink:#0F3D28;
+  --ink:#16211C; --paper:#FBF8F1; --sand:#F2E9DA; --card:#FFFFFF;
+  --muted:#4A5750; --line:#E7E0D2; --coral:#E27A5A;
+  --radius:20px; --shadow-sm:0 2px 10px rgba(15,61,40,.06);
+  --shadow-md:0 16px 44px rgba(15,61,40,.12); --shadow-lg:0 30px 70px rgba(15,61,40,.16);
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Inter",ui-sans-serif,system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3,.display{font-family:var(--display);line-height:1.1;letter-spacing:-.02em;font-weight:700}
+.wrap{width:100%;max-width:640px;margin:0 auto;padding:22px}
+
+/* header */
+.top{display:flex;justify-content:center;padding:22px 22px 0}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:800;font-size:1.18rem;color:var(--emerald-ink)}
+.logo svg{width:28px;height:28px}
+.logo .lab{color:var(--emerald)}
+
+/* shared */
+.eyebrow{display:inline-block;font-family:var(--display);font-weight:700;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--emerald);background:rgba(27,122,79,.09);padding:7px 14px;border-radius:999px;margin-bottom:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;background:var(--emerald);color:#fff;font-family:var(--display);font-weight:700;font-size:1.05rem;padding:16px 34px;border-radius:999px;border:0;cursor:pointer;box-shadow:0 10px 24px rgba(27,122,79,.30);transition:transform .16s,box-shadow .16s,background .16s;width:100%;max-width:340px}
+.btn:hover{background:var(--emerald-deep);transform:translateY(-2px)}
+.btn:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+.screen{display:none;animation:fade .45s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* intro */
+.intro{text-align:center;padding:40px 22px 60px}
+.intro h1{font-size:clamp(2rem,6vw,2.9rem);font-weight:800;margin-bottom:18px}
+.intro p.sub{color:var(--muted);font-size:1.12rem;max-width:30ch;margin:0 auto 30px}
+.meta{display:flex;gap:8px 22px;justify-content:center;flex-wrap:wrap;color:var(--muted);font-size:.9rem;font-weight:500;margin-bottom:32px}
+.meta span{display:inline-flex;align-items:center;gap:7px}
+.meta svg{width:16px;height:16px;color:var(--emerald)}
+.fineprint{margin-top:18px;color:#9a948a;font-size:.82rem}
+
+/* quiz */
+.progress-wrap{max-width:640px;margin:0 auto;padding:10px 22px 0}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:.82rem;color:var(--muted);font-weight:600}
+.progress-back{background:none;border:0;color:var(--muted);cursor:pointer;font:inherit;font-size:.82rem;display:inline-flex;align-items:center;gap:5px;padding:4px}
+.progress-back:hover{color:var(--emerald)}
+.bar{height:8px;background:var(--sand);border-radius:999px;overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:var(--emerald);border-radius:999px;transition:width .4s cubic-bezier(.2,.7,.2,1)}
+.q{padding:30px 22px 60px}
+.q h2{font-size:clamp(1.4rem,4vw,1.9rem);font-weight:700;margin-bottom:8px;text-align:center}
+.q .qsub{text-align:center;color:var(--muted);margin-bottom:26px;font-size:1rem}
+.options{display:flex;flex-direction:column;gap:12px;max-width:520px;margin:0 auto}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:18px 20px;cursor:pointer;font:inherit;font-size:1.02rem;color:var(--ink);box-shadow:var(--shadow-sm);transition:border-color .15s,transform .15s,box-shadow .15s}
+.opt:hover{border-color:var(--emerald);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.opt:focus-visible{outline:2px solid var(--emerald);outline-offset:2px}
+.opt .emoji{font-size:1.5rem;flex:none;line-height:1}
+.opt.sel{border-color:var(--emerald);background:rgba(27,122,79,.05)}
+
+/* analyzing */
+.analyze{text-align:center;padding:90px 22px}
+.spinner{width:54px;height:54px;border-radius:50%;border:4px solid var(--sand);border-top-color:var(--emerald);margin:0 auto 26px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.analyze p{font-family:var(--display);font-weight:600;font-size:1.2rem;color:var(--emerald-ink)}
+.analyze small{display:block;margin-top:8px;color:var(--muted);font-family:var(--body);font-weight:400}
+
+/* result */
+.result{padding:30px 22px 70px}
+.result .tag{text-align:center}
+.result h2.mirror{font-size:clamp(1.6rem,4.5vw,2.3rem);font-weight:800;text-align:center;margin:14px 0 16px}
+.result .mirror-p{text-align:center;color:var(--muted);font-size:1.08rem;max-width:44ch;margin:0 auto 30px}
+.match-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-md);overflow:hidden;max-width:560px;margin:0 auto}
+.match-head{background:var(--emerald);color:#fff;padding:22px 26px}
+.match-head .kicker{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;opacity:.85;font-family:var(--display)}
+.match-head h3{font-size:1.5rem;margin-top:4px;color:#fff}
+.match-head .price{margin-top:8px;font-family:var(--display);font-weight:700;font-size:1.05rem;display:inline-flex;gap:8px;align-items:baseline}
+.match-head .price .free{background:#fff;color:var(--emerald-deep);padding:3px 10px;border-radius:999px;font-size:.82rem}
+.match-body{padding:24px 26px 28px}
+.match-body .why{font-family:var(--display);font-weight:700;color:var(--emerald-ink);margin-bottom:14px;font-size:1.05rem}
+.match-body ul{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:22px}
+.match-body li{display:flex;gap:11px;font-size:.99rem;color:var(--ink)}
+.match-body li svg{width:20px;height:20px;color:var(--emerald);flex:none;margin-top:2px}
+.match-body .cta{width:100%;max-width:none}
+.result .secondary{text-align:center;margin-top:22px}
+.result .secondary a{color:var(--muted);font-size:.9rem;text-decoration:underline;cursor:pointer}
+.result .restart{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:.9rem}
+.disclaimer{max-width:520px;margin:26px auto 0;text-align:center;color:#9a948a;font-size:.8rem;line-height:1.6}
+
+.footer{text-align:center;padding:30px 22px 40px;color:#9a948a;font-size:.82rem}
+</style>
+</head>
+<body>
+
+<!-- SCREENS -->
+
+<!-- INTRO -->
+<section class="screen active" id="s-intro">
+  <div class="intro">
+    <span class="eyebrow">2-minute parenting check-in</span>
+    <h1>Which guide is right for your family right now?</h1>
+    <p class="sub">Answer 5 quick questions and we'll match you with the ParentLab resource that fits your biggest challenge today.</p>
+    <div class="meta">
+      <span><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Takes ~2 minutes</span>
+      <span><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>5 questions</span>
+      <span><svg viewBox="0 0 24 24" fill="none"><path d="M12 3a6 6 0 0 0-4 10.5V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-3.5A6 6 0 0 0 12 3Z" stroke="currentColor" stroke-width="1.8"/></svg>Science-based</span>
+    </div>
+    <button class="btn" id="start-btn">Start the check-in →</button>
+    <p class="fineprint">No email required to see your result. Just honest, helpful matching. 💛</p>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="screen" id="s-quiz">
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <button class="progress-back" id="back-btn" aria-label="Previous question"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Back</button>
+      <span id="q-counter">Question 1 of 5</span>
+    </div>
+    <div class="bar"><i id="bar-fill"></i></div>
+  </div>
+  <div class="q">
+    <h2 id="q-title"></h2>
+    <p class="qsub" id="q-sub"></p>
+    <div class="options" id="q-options"></div>
+  </div>
+</section>
+
+<!-- ANALYZING -->
+<section class="screen" id="s-analyze">
+  <div class="analyze">
+    <div class="spinner"></div>
+    <p>Matching you with the right guide…<small>Reading your answers</small></p>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section class="screen" id="s-result">
+  <div class="result">
+    <div class="tag"><span class="eyebrow" id="r-eyebrow">Your match</span></div>
+    <h2 class="mirror" id="r-mirror"></h2>
+    <p class="mirror-p" id="r-mirrorp"></p>
+
+    <div class="match-card">
+      <div class="match-head">
+        <div class="kicker">Recommended for you</div>
+        <h3 id="r-title"></h3>
+        <div class="price" id="r-price"></div>
+      </div>
+      <div class="match-body">
+        <div class="why">Why this fits you:</div>
+        <ul id="r-why"></ul>
+        <a class="btn cta" id="r-cta" href="#" target="_blank" rel="noopener"></a>
+      </div>
+    </div>
+
+    <div class="secondary">
+      <button class="restart" id="restart-btn">↺ Retake the check-in</button>
+    </div>
+    <p class="disclaimer">This check-in offers general, educational guidance based on your answers — it isn't medical or psychological advice. Every family is different; trust what you know about your child.</p>
+  </div>
+</section>
+
+<div class="footer">© <span id="yr"></span> ParentLab · Child psychology, translated for tired parents.</div>
+
+<script>
+// ---------- CONFIG: products ----------
+const PRODUCTS = {
+  kc: {
+    key:'kc',
+    eyebrow:'Your match',
+    mirror:'It sounds like the hardest part right now… is how depleted you feel.',
+    mirrorp:'When you\'re running on empty, everything your child does hits harder. Before any script or method, you deserve to feel steadier yourself — and the good news is that\'s the fastest thing to change.',
+    title:'Keep Your Cool',
+    priceHTML:'<span class="free">FREE</span> <span style="opacity:.85;font-size:.9rem">Instant download</span>',
+    why:[
+      'It\'s built for the exact moment you feel yourself about to lose it — and what to do instead.',
+      'A simple system (Spot it · Steady it · Soften it) you\'ll actually remember at 7pm.',
+      'Zero guilt, zero "perfect parent" pressure — just calmer days, more often.'
+    ],
+    cta:'Get Keep Your Cool — free →',
+    url:'https://parentlabofficial.com/prd_cdv0i573'
+  },
+  le: {
+    key:'le',
+    eyebrow:'Your match',
+    mirror:'Your challenge is those big-feeling moments when you don\'t know what to say.',
+    mirrorp:'The tantrums, the "no," the meltdowns over nothing — it\'s not that you\'re doing it wrong. No one handed you the words. That\'s exactly what this guide gives you.',
+    title:'Little Ears, Big Feelings',
+    priceHTML:'<span>$17</span> <span style="text-decoration:line-through;opacity:.7;font-size:.9rem">$27</span> <span style="font-size:.8rem;opacity:.85">launch offer</span>',
+    why:[
+      'Word-for-word scripts for tantrums, the endless "no," transitions, and the hard moments.',
+      'The science of what\'s really happening in your toddler\'s brain — made simple.',
+      'How to get cooperation and set limits that stick, without yelling or bribes.'
+    ],
+    cta:'Get the guide →',
+    url:'https://parentlabofficial.com/prd_hwm8plq3'
+  },
+  rp: {
+    key:'rp',
+    eyebrow:'Your match',
+    mirror:'You\'re in the thick of potty training — and the battles are wearing you down.',
+    mirrorp:'Refusals, accidents, holding, power struggles… the boot-camp methods usually make a strong-willed kid dig in harder. There\'s a gentler way that actually sticks — by following your child, not a deadline.',
+    title:'Ready, Set, Potty',
+    priceHTML:'<span>$27</span> <span style="opacity:.85;font-size:.9rem">Instant download</span>',
+    why:[
+      'A gentle, science-based method — no boot camp, no pressure, no power struggles.',
+      'How to tell if your child is actually ready, plus what to say when they refuse.',
+      'The poop-holding problem, regressions, and real life (daycare, nights, travel) — solved calmly.'
+    ],
+    cta:'Get the guide →',
+    url:'https://parentlabofficial.com/prd_wrpndc1j'
+  }
+};
+
+// ---------- CONFIG: questions ----------
+// each option adds weights toward kc / le / rp
+const QUESTIONS = [
+  {
+    title:"How old is your little one?",
+    sub:"This helps us tailor the match to their stage.",
+    options:[
+      {emoji:"🍼",label:"Under 2",w:{kc:1,le:1,rp:0}},
+      {emoji:"🧸",label:"2 to 3 years",w:{kc:1,le:2,rp:2}},
+      {emoji:"🖍️",label:"3 to 4 years",w:{kc:1,le:2,rp:1}},
+      {emoji:"⚽",label:"4 to 6 years",w:{kc:1,le:2,rp:0}}
+    ]
+  },
+  {
+    title:"When the day gets hard, what's usually at the center of it?",
+    sub:"Pick the one that hits closest to home.",
+    options:[
+      {emoji:"🌋",label:"Meltdowns & big emotions I don't know how to handle",w:{le:3}},
+      {emoji:"🙉",label:"Getting them to listen and cooperate",w:{le:3}},
+      {emoji:"🚽",label:"Potty training battles",w:{rp:4}},
+      {emoji:"😮‍💨",label:"Honestly? I'm the one losing my cool",w:{kc:3}}
+    ]
+  },
+  {
+    title:"Which of these sounds most like you lately?",
+    sub:"Be honest — there's no wrong answer here.",
+    options:[
+      {emoji:"😔",label:"\u201cI feel like I'm always yelling, then feeling guilty.\u201d",w:{kc:3}},
+      {emoji:"🤷",label:"\u201cI never know what to say in the moment.\u201d",w:{le:3}},
+      {emoji:"😩",label:"\u201cI'm dreading — or stuck on — potty training.\u201d",w:{rp:3}},
+      {emoji:"🫠",label:"\u201cI'm just exhausted and doubting myself.\u201d",w:{kc:2,le:1}}
+    ]
+  },
+  {
+    title:"Is there something specific you're trying to solve right now?",
+    sub:"This tells us how urgent things feel.",
+    options:[
+      {emoji:"📅",label:"A potty deadline (daycare, a trip, family visiting)",w:{rp:4}},
+      {emoji:"🔁",label:"Daily tantrums and power struggles",w:{le:3}},
+      {emoji:"🧘",label:"My own patience and reactions",w:{kc:3}},
+      {emoji:"🌱",label:"Nothing urgent — I just want to parent better",w:{kc:1,le:1}}
+    ]
+  },
+  {
+    title:"If you could fix ONE thing this month, it'd be…",
+    sub:"What would make the biggest difference?",
+    options:[
+      {emoji:"💬",label:"Knowing exactly what to say when they melt down",w:{le:3}},
+      {emoji:"🚼",label:"Finally getting out of diapers — calmly",w:{rp:4}},
+      {emoji:"🕊️",label:"Staying calm no matter what they throw at me",w:{kc:3}},
+      {emoji:"🧠",label:"Understanding WHY my kid does what they do",w:{le:2,kc:1}}
+    ]
+  }
+];
+
+// ---------- ENGINE ----------
+const scores={kc:0,le:0,rp:0};
+let current=0;
+const answers=[]; // store chosen option index per question
+
+const el=id=>document.getElementById(id);
+const screens={intro:el('s-intro'),quiz:el('s-quiz'),analyze:el('s-analyze'),result:el('s-result')};
+function show(name){Object.values(screens).forEach(s=>s.classList.remove('active'));screens[name].classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+
+function renderQuestion(){
+  const q=QUESTIONS[current];
+  el('q-counter').textContent=`Question ${current+1} of ${QUESTIONS.length}`;
+  el('bar-fill').style.width=`${(current/QUESTIONS.length)*100}%`;
+  el('q-title').textContent=q.title;
+  el('q-sub').textContent=q.sub;
+  el('back-btn').style.visibility=current===0?'hidden':'visible';
+  const box=el('q-options');box.innerHTML='';
+  q.options.forEach((opt,i)=>{
+    const b=document.createElement('button');
+    b.className='opt'+(answers[current]===i?' sel':'');
+    b.innerHTML=`<span class="emoji">${opt.emoji}</span><span>${opt.label}</span>`;
+    b.onclick=()=>choose(i);
+    box.appendChild(b);
+  });
+}
+
+function choose(i){
+  // if re-answering, remove previous weights
+  if(answers[current]!=null){
+    const prev=QUESTIONS[current].options[answers[current]].w;
+    for(const k in prev) scores[k]-=prev[k];
+  }
+  answers[current]=i;
+  const w=QUESTIONS[current].options[i].w;
+  for(const k in w) scores[k]+=w[k];
+  // visual select then advance
+  document.querySelectorAll('.opt').forEach((o,idx)=>o.classList.toggle('sel',idx===i));
+  setTimeout(()=>{
+    if(current<QUESTIONS.length-1){current++;renderQuestion();}
+    else finish();
+  },260);
+}
+
+el('back-btn').onclick=()=>{if(current>0){current--;renderQuestion();}};
+
+function finish(){
+  el('bar-fill').style.width='100%';
+  show('analyze');
+  setTimeout(showResult,1700);
+}
+
+function pickWinner(){
+  // highest score; tie-break priority: rp (most specific) > le > kc
+  const order=['rp','le','kc'];
+  let best=null,bestScore=-1;
+  order.forEach(k=>{ if(scores[k]>bestScore){bestScore=scores[k];best=k;} });
+  return best;
+}
+
+function showResult(){
+  const p=PRODUCTS[pickWinner()];
+  el('r-eyebrow').textContent=p.eyebrow;
+  el('r-mirror').textContent=p.mirror;
+  el('r-mirrorp').textContent=p.mirrorp;
+  el('r-title').textContent=p.title;
+  el('r-price').innerHTML=p.priceHTML;
+  const ul=el('r-why');ul.innerHTML='';
+  p.why.forEach(t=>{const li=document.createElement('li');li.innerHTML=`<svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${t}</span>`;ul.appendChild(li);});
+  const cta=el('r-cta');cta.textContent=p.cta;cta.href=p.url;
+  show('result');
+}
+
+el('start-btn').onclick=()=>{show('quiz');renderQuestion();};
+el('restart-btn').onclick=()=>{current=0;answers.length=0;scores.kc=scores.le=scores.rp=0;show('intro');};
+el('yr').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
