@@ -181,6 +181,25 @@ p,li{text-wrap:pretty}
 .analyze p{font-family:var(--display);font-weight:600;font-size:1.18rem;color:var(--emerald-ink)}
 .analyze small{display:block;margin-top:8px;color:var(--muted);font-family:var(--body);font-weight:400}
 
+/* ---------- EMAIL GATE ---------- */
+.gate{padding:44px 22px 70px;max-width:660px;margin:0 auto}
+.gate-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-md);overflow:hidden;max-width:500px;margin:0 auto}
+.gate-head{background:var(--emerald);color:#fff;padding:26px 26px 24px;text-align:center}
+.gate-head .kicker{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;font-weight:700;opacity:.85;font-family:var(--display)}
+.gate-head h2{font-size:clamp(1.3rem,4vw,1.65rem);margin-top:8px;color:#fff;letter-spacing:-.02em}
+.gate-body{padding:24px 26px 26px}
+.gate-sub{color:var(--muted);font-size:.97rem;line-height:1.62;margin-bottom:18px}
+.gate-sub b{color:var(--emerald-ink);font-weight:600}
+#gate-form{display:flex;flex-direction:column;gap:11px}
+#gate-email{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:15px 16px;font:inherit;font-size:1.02rem;background:#fff;color:var(--ink);text-align:center}
+#gate-email:focus{outline:2px solid var(--emerald);outline-offset:1px}
+#gate-email.err{border-color:#C0392B}
+#gate-form .btn{max-width:none}
+.btn[disabled]{opacity:.65;cursor:default;transform:none}
+.gate-error{color:#C0392B;font-size:.88rem;line-height:1.5;min-height:1.3em;margin-top:10px;text-align:center}
+.gate-skip{display:none;background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:.88rem;margin:6px auto 0}
+.gate-consent{color:#9a948a;font-size:.78rem;line-height:1.55;margin-top:14px;text-align:center}
+
 /* ---------- RESULT ---------- */
 .result{padding:26px 22px 70px}
 .reveal-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-md);overflow:hidden;max-width:580px;margin:0 auto 26px}
@@ -264,7 +283,7 @@ p,li{text-wrap:pretty}
         <h1>Your child's hardest moments <span class="hl">have a pattern</span>. Find yours in 2&nbsp;minutes.</h1>
         <p class="sub">Answer 9 quick questions and get a plain-language read on what's really driving the meltdowns, the standoffs and the burnout — plus the one change most likely to help this month.</p>
         <button class="btn btn-hero" id="start-btn" data-start>Start the free check-in →</button>
-        <p class="cta-note">No email. No card. Your results appear instantly.</p>
+        <p class="cta-note">Completely free. No card, no account. Results in about 2 minutes.</p>
         <div class="reducers">
           <span><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Takes 2 minutes</span>
           <span><svg viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>9 simple questions</span>
@@ -328,7 +347,7 @@ p,li{text-wrap:pretty}
       </div>
       <div class="lp-cta-row">
         <button class="btn" data-start>Start the check-in →</button>
-        <p class="cta-note">Free · instant results · no email required</p>
+        <p class="cta-note">Free · takes about 2 minutes · no card, no account</p>
       </div>
     </div>
   </div>
@@ -338,7 +357,7 @@ p,li{text-wrap:pretty}
     <div class="lp-wrap">
       <header class="lp-head">
         <span class="lp-kicker">How it works</span>
-        <h2 class="lp-h2">Three steps. No signup. No homework.</h2>
+        <h2 class="lp-h2">Three steps. Two minutes. No homework.</h2>
       </header>
       <div class="steps">
         <div class="step">
@@ -353,8 +372,8 @@ p,li{text-wrap:pretty}
         </div>
         <div class="step">
           <h3>Get your result</h3>
-          <p>Your parent profile, what's fueling the friction at home, and the one change to focus on first.</p>
-          <span class="step-time">on screen right away</span>
+          <p>Pop in your email and your full result appears — your parent profile, what's fueling the friction, and the one change to focus on first.</p>
+          <span class="step-time">on screen + in your inbox</span>
         </div>
       </div>
     </div>
@@ -458,7 +477,7 @@ p,li{text-wrap:pretty}
       <div class="faq">
         <details>
           <summary>Is the check-in really free?</summary>
-          <p>Yes — completely. No email, no card, no account. You answer 9 questions and your full results appear instantly on the page.</p>
+          <p>Yes — completely free, no card, no account. At the end we ask for your email so we can send you your results and personalized next steps; your full results also appear on screen right away. You can unsubscribe anytime, in one click.</p>
         </details>
         <details>
           <summary>What do I get at the end?</summary>
@@ -482,7 +501,7 @@ p,li{text-wrap:pretty}
       <h2>Two minutes from now, you could know what to change first.</h2>
       <p class="fsub">9 questions · instant results · completely free</p>
       <button class="btn btn-hero" data-start>Start the free check-in →</button>
-      <p class="cta-note">No email required · nothing to download</p>
+      <p class="cta-note">Completely free · nothing to download · unsubscribe anytime</p>
     </div>
   </div>
 </section>
@@ -516,6 +535,28 @@ p,li{text-wrap:pretty}
   <div class="analyze">
     <div class="spinner"></div>
     <p id="analyze-text">Reading your answers…<small id="analyze-sub">Matching them to what the research says</small></p>
+  </div>
+</section>
+
+<!-- ========== 3.5 EMAIL GATE — capture before the reveal ========== -->
+<section class="screen" id="s-email">
+  <div class="gate">
+    <div class="gate-card">
+      <div class="gate-head">
+        <div class="kicker">Your result is ready</div>
+        <h2>Where should we send your personalized plan?</h2>
+      </div>
+      <div class="gate-body">
+        <p class="gate-sub">Enter your email to unlock your full result — <b>your parent profile</b>, what's driving the friction at home, and <b>the one change to focus on first</b>. We'll also send your personalized next steps to your inbox.</p>
+        <form id="gate-form" novalidate>
+          <input type="email" id="gate-email" inputmode="email" autocomplete="email" placeholder="you@example.com" aria-label="Your email address" required>
+          <button class="btn" type="submit" id="gate-btn">Show my results →</button>
+        </form>
+        <p class="gate-error" id="gate-error" role="alert"></p>
+        <button class="gate-skip" id="gate-skip" type="button">Continue without email</button>
+        <p class="gate-consent">By continuing, you agree to receive your results and occasional parenting tips from ParentLab. Unsubscribe anytime, in one click.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -818,7 +859,7 @@ const scores={kc:0,le:0,rp:0,wi:0};
 let friction=0, current=0, freeText="";
 const answers=[];
 const el=id=>document.getElementById(id);
-const screens={intro:el('s-intro'),quiz:el('s-quiz'),analyze:el('s-analyze'),result:el('s-result')};
+const screens={intro:el('s-intro'),quiz:el('s-quiz'),analyze:el('s-analyze'),email:el('s-email'),result:el('s-result')};
 function show(n){Object.values(screens).forEach(s=>s.classList.remove('active'));screens[n].classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
 
 function renderQuestion(){
@@ -869,8 +910,60 @@ function runAnalyze(){
                ["Almost there…","Picking the one change that would help most"]];
   let i=0; el('analyze-text').innerHTML=steps[0][0]+'<small>'+steps[0][1]+'</small>';
   const t=setInterval(()=>{i++; if(i<steps.length){el('analyze-text').innerHTML=steps[i][0]+'<small>'+steps[i][1]+'</small>';}},800);
-  setTimeout(()=>{clearInterval(t);showResult();},2400);
+  setTimeout(()=>{clearInterval(t);show('email');},2400);
 }
+
+/* ---------- EMAIL GATE (MailerLite via /api/subscribe) ----------
+   The MailerLite API key lives server-side in the Vercel function
+   api/subscribe.js — never in this file. */
+let gateDone=false, gateFails=0;
+const validEmail=e=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);
+
+async function subscribeEmail(email){
+  const key=pickWinner(), prof=PROFILES[key];
+  const r=await fetch('/api/subscribe',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email, profile:prof.name, product:PRODUCTS[prof.product].title})
+  });
+  if(!r.ok){
+    const d=await r.json().catch(()=>({}));
+    const err=new Error(d.error||('HTTP '+r.status)); err.status=r.status; throw err;
+  }
+}
+
+el('gate-form').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  if(gateDone) return;
+  const input=el('gate-email'), err=el('gate-error'), btn=el('gate-btn');
+  const email=input.value.trim();
+  err.textContent=''; input.classList.remove('err');
+  if(!validEmail(email)){
+    input.classList.add('err');
+    err.textContent='Please enter a valid email address.';
+    input.focus();
+    return;
+  }
+  btn.disabled=true; btn.textContent='One moment…';
+  try{
+    await subscribeEmail(email);
+    gateDone=true;
+    showResult();
+  }catch(e){
+    if(e.status===422){
+      input.classList.add('err');
+      err.textContent='That email doesn’t look right — please double-check it.';
+    }else{
+      gateFails++;
+      err.textContent='Hmm, that didn’t go through. Please check your connection and try again.';
+      /* never let a network problem brick the funnel: after 2 failures, open an escape hatch */
+      if(gateFails>=2) el('gate-skip').style.display='block';
+    }
+  }finally{
+    btn.disabled=false; btn.textContent='Show my results →';
+  }
+});
+el('gate-skip').onclick=()=>{gateDone=true;showResult();};
 
 function pickWinner(){
   const order=['wi','rp','le','kc'];
@@ -916,7 +1009,7 @@ function showResult(){
 document.querySelectorAll('[data-start]').forEach(b=>b.onclick=()=>{show('quiz');renderQuestion();});
 /* landing guide covers reuse the images already stored in PRODUCTS — no duplicate data */
 document.querySelectorAll('img[data-cover]').forEach(im=>{const p=PRODUCTS[im.dataset.cover];if(p){im.src=p.cover;}});
-el('restart-btn').onclick=()=>{current=0;answers.length=0;friction=0;freeText="";scores.kc=scores.le=scores.rp=scores.wi=0;show('intro');};
+el('restart-btn').onclick=()=>{current=0;answers.length=0;friction=0;freeText="";scores.kc=scores.le=scores.rp=scores.wi=0;gateDone=false;gateFails=0;el('gate-email').value='';el('gate-email').classList.remove('err');el('gate-error').textContent='';el('gate-skip').style.display='none';show('intro');};
 el('yr').textContent=new Date().getFullYear();
 
 /* deep-link straight into Q1 for paid traffic:  ...?start=1  */

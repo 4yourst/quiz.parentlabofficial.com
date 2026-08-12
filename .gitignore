@@ -1,0 +1,4 @@
+# local secrets — the MailerLite key must only ever live in env vars
+.env
+.env.*
+.vercel
