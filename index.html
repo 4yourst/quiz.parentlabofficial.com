@@ -223,6 +223,10 @@ p,li{text-wrap:pretty}
 .reveal-head .kicker{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;font-weight:700;opacity:.85;font-family:var(--display)}
 .reveal-head h2{font-size:clamp(1.5rem,4.5vw,2.1rem);margin-top:8px;color:#fff}
 .reveal-head .oneline{margin-top:10px;opacity:.92;font-size:1rem}
+/* answer recap: the strongest "this really is mine" signal on the page */
+.recap{background:var(--sand);border-bottom:1px solid var(--line);padding:15px 26px;font-size:.93rem;line-height:1.6;color:var(--muted);text-align:center}
+.recap[hidden]{display:none}
+.recap b{color:var(--emerald-ink);font-weight:600}
 .meter{padding:22px 26px 6px}
 .meter .mlabel{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);font-weight:600;margin-bottom:8px}
 .meter .mbar{height:12px;background:var(--sand);border-radius:999px;overflow:hidden}
@@ -608,6 +612,7 @@ p,li{text-wrap:pretty}
         <h2 id="r-profile"></h2>
         <div class="oneline" id="r-oneline"></div>
       </div>
+      <p class="recap" id="r-recap" hidden></p>
       <div class="meter">
         <div class="mlabel"><span>Current friction in your day</span><span id="r-score-label"></span></div>
         <div class="mbar"><i id="r-score-bar"></i></div>
@@ -1015,9 +1020,91 @@ el('gate-form').addEventListener('submit',async ev=>{
 });
 el('gate-skip').onclick=()=>{gateDone=true;showResult();};
 
+/* ---------- PERSONALISATION ----------
+   The four archetypes decide WHICH guide is recommended. Everything the visitor
+   reads is then built from the specific options they picked, so two people who
+   land on the same archetype by different routes do not read the same page. */
+
+/* short phrases, index-aligned with each question's options */
+const RECAP = {
+  0:["a child under 2","a 2 to 3 year old","a 3 to 5 year old","a 6 to 11 year old"],
+  1:["meltdowns and big feelings","not being listened to","potty training","school and focus","your own reactions"],
+  2:["once in a while","a few times a week","most days","several times a day"],
+  5:["you run out of patience before it works","you don't know what to actually say",
+     "there isn't time to work it out","you can't see why it's happening",
+     "you and your partner aren't aligned"],
+  7:["knowing what to say mid-meltdown","being out of diapers, calmly",
+     "understanding why school is so hard","staying calm whatever they throw at you",
+     "understanding why your child does what they do"]
+};
+
+/* insight keyed to Q2: what is at the centre of the hard days */
+const INS_MAIN = [
+ "<b>A meltdown isn't a decision.</b> When feelings outrun the brakes, the thinking part of your child's brain briefly stops driving. Nothing you say lands until that passes, which is why calm-down instructions bounce off.",
+ "<b>Most \"not listening\" is a braking problem, not a hearing problem.</b> The part of the brain that stops an impulse is years from finished. They registered you, and they genuinely couldn't stop yet.",
+ "<b>Toileting is one of the few things a toddler fully controls.</b> That makes it a magnet for standoffs. The more pressure goes in, the tighter they hold on, quite literally.",
+ "<b>The same school struggle can have completely different causes.</b> Vision, a missing foundation, real anxiety or quiet boredom all look identical from the kitchen table. Generic advice helps almost none of them.",
+ "<b>The same behaviour hits differently depending on your state.</b> The spill you shrug off on a good day is unbearable on four hours of sleep. That isn't a character flaw, it's a nervous system with less left to absorb with."
+];
+
+/* insight keyed to Q6: what actually gets in the way */
+const INS_BLOCK = [
+ "<b>Patience isn't a personality trait you ran out of.</b> It's a resource, and it drains fastest at the end of the day. What works is a plan you can run when your patience is already gone, not more willpower.",
+ "<b>Wanting the right words isn't a gap in instinct.</b> Nobody is born with scripts for this. The parents who look effortless are usually reusing a handful of sentences they've said hundreds of times.",
+ "<b>The fix has to fit the ten seconds you actually have.</b> Anything that needs a calm evening to set up won't survive a real week. Small changes made at the moment of friction beat big plans you never start.",
+ "<b>Not understanding the why is the most useful place to be stuck.</b> It means you've stopped guessing. Behaviour is information, and reading it correctly is what makes the right response obvious.",
+ "<b>Two adults responding differently is its own variable.</b> Children adapt to whoever is in front of them, so mixed approaches read as inconsistency rather than as two valid styles. Agreeing on one sentence matters more than agreeing on everything."
+];
+
+/* insight keyed to Q7: how it is landing on the child */
+const INS_CHILD = [
+ "<b>You noticed this before it reached them.</b> That's the easiest possible moment to change course, and the reason a small adjustment now goes further than a big one later.",
+ "<b>Upset that passes is a good sign.</b> It means recovery is already working. What builds security isn't the absence of hard moments, it's the reliable return to calm afterwards.",
+ "<b>When a child starts narrating themselves as the problem, timing matters.</b> Beliefs about ability harden with repetition. Interrupting that story early counts for more than fixing the underlying skill first.",
+ "<b>Avoidance is usually protection, not laziness.</b> Children step back from whatever reliably makes them feel incapable. Lowering the threat tends to restore effort faster than raising the stakes."
+];
+
 function pickWinner(){
-  const order=['wi','rp','le','kc'];
-  let best=null,bs=-1; order.forEach(k=>{if(scores[k]>bs){bs=scores[k];best=k;}}); return best;
+  const keys=['kc','le','rp','wi'];
+  const top=Math.max(...keys.map(k=>scores[k]));
+  let tied=keys.filter(k=>scores[k]===top);
+  if(tied.length===1) return tied[0];
+  /* Break ties with the visitor's own most explicit answers (the closing "one
+     thing", then the main issue, then the self-description) instead of a fixed
+     alphabetical order, which used to hand every tie to the same profile. */
+  for(const qi of [7,1,3,5]){
+    const a=answers[qi];
+    if(a==null||!QUESTIONS[qi].options) continue;
+    const w=QUESTIONS[qi].options[a].w||{};
+    const bs=Math.max(...tied.map(k=>w[k]||0));
+    if(bs>0){
+      const short=tied.filter(k=>(w[k]||0)===bs);
+      if(short.length===1) return short[0];
+      tied=short;
+    }
+  }
+  return tied[0];
+}
+
+/* runner-up archetype, when it is close enough to be worth naming */
+function secondPlace(winner){
+  const keys=['kc','le','rp','wi'].filter(k=>k!==winner);
+  let best=null,bs=-1;
+  keys.forEach(k=>{if(scores[k]>bs){bs=scores[k];best=k;}});
+  return (bs>0 && scores[winner]-bs<=2) ? best : null;
+}
+
+function buildRecap(){
+  const p=i=>(answers[i]!=null && RECAP[i]) ? RECAP[i][answers[i]] : null;
+  const bits=[];
+  if(p(0)) bits.push(`you have <b>${p(0)}</b>`);
+  if(p(1)) bits.push(`the day turns on <b>${p(1)}</b>`);
+  if(p(2)) bits.push(`it happens <b>${p(2)}</b>`);
+  if(p(5)) bits.push(`and what gets in the way is that <b>${p(5)}</b>`);
+  if(!bits.length) return '';
+  let out='From your answers: '+bits.join(', ')+'.';
+  if(p(7)) out+=` The change you asked for is <b>${p(7)}</b>.`;
+  return out;
 }
 function frictionPct(){
   const max=20; // verified max across all scored questions
@@ -1038,13 +1125,28 @@ function showResult(){
     ? "There's real friction in your days, but it's not everywhere. That's the sweet spot for change, one targeted shift tends to bring the temperature down noticeably."
     : "Things are largely working. What you're feeling is the normal grind of parenting a small human and a small, well-aimed change can make it lighter.";
 
+  /* Insights are assembled from the options this visitor actually chose, with the
+     archetype's own copy filling any gap, so the three points differ path to path. */
+  const picked=[];
+  const add=t=>{ if(t && !picked.includes(t)) picked.push(t); };
+  add(answers[1]!=null ? INS_MAIN[answers[1]] : null);
+  add(answers[5]!=null ? INS_BLOCK[answers[5]] : null);
+  add(answers[6]!=null ? INS_CHILD[answers[6]] : null);
+  prof.insights.forEach(add);          // top up if a question was skipped
   const box=el('r-insights'); box.innerHTML='';
-  prof.insights.forEach((t,i)=>{
+  picked.slice(0,3).forEach((t,i)=>{
     const d=document.createElement('div'); d.className='ins';
     d.innerHTML=`<div class="num">${i+1}</div><p>${t}</p>`; box.appendChild(d);
   });
 
-  el('r-bridge').textContent=prof.bridge;
+  const recap=buildRecap();
+  el('r-recap').innerHTML=recap;
+  el('r-recap').hidden=!recap;
+
+  const second=secondPlace(key);
+  el('r-bridge').innerHTML = second
+    ? `${prof.bridge} Your answers also lean towards <b>${PROFILES[second].name.replace(/^The /,'')}</b>, so keep that in mind as you read.`
+    : prof.bridge;
   el('r-title').textContent=prod.title;
   const cover=el('r-cover'); cover.src=prod.cover; cover.alt=`${prod.title} guide cover`;
   el('r-price').innerHTML=prod.price;
